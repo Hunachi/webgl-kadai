@@ -57,13 +57,12 @@ function init() {
     hoppey0.rotation.x = Math.PI / 2;
     scene.add(hoppey0);
 
-    const gnya = new THREE.SphereGeometry(150, 500, 500, Math.PI/2, Math.PI/3, Math.PI/4, Math.PI /4);
-    const mnya = new THREE.MeshBasicMaterial({ color: 0xF2D5AD });
-    const nya = new THREE.Mesh(gnya, mnya);
-    nya.rotation.y = Math.PI/3;
-    nya.position.set(10, -50, 100);
-
-    scene.add(nya);
+    const gkyokumen = new THREE.SphereGeometry(150, 500, 500, Math.PI / 2, Math.PI / 3, Math.PI / 4, Math.PI / 4);
+    const mkyokumen = new THREE.MeshBasicMaterial({ color: 0xF2D5AD });
+    const kyokumen = new THREE.Mesh(gkyokumen, mkyokumen);
+    kyokumen.rotation.y = Math.PI / 3;
+    kyokumen.position.set(10, -50, 100);
+    scene.add(kyokumen);
 
 
     const hoppey1 = new THREE.Mesh(ghoppey, mhoppey);
@@ -134,7 +133,24 @@ function init() {
     mimi1.position.set(100, 25, 190);
     scene.add(mimi1);
 
+    // 窓
+    const gmadofront = new THREE.SphereGeometry(100, 500, 500, Math.PI / 3 + Math.PI / 9, 2 * Math.PI / 3 - 2 * Math.PI / 9, (Math.PI) / 4, Math.PI / 7);
+    const mmadofront = new THREE.MeshBasicMaterial({ color: 0xB48166 });
+    const madofront = new THREE.Mesh(gmadofront, mmadofront);
+    madofront.rotation.y = Math.PI / 3;
+    madofront.rotation.z = Math.PI / 120;
+    madofront.position.set(51, 0, 100);
+    scene.add(madofront);
 
+    // 口と鼻
+    const nosePoints = [];
+    nosePoints.push(new THREE.Vector3(159, -30, 110));
+    nosePoints.push(new THREE.Vector3(160, -40, 100));
+    nosePoints.push(new THREE.Vector3(159, -30, 90));
+    const mNose = new THREE.LineBasicMaterial({ color: 0x84491D });
+    const gNose = new THREE.BufferGeometry().setFromPoints(nosePoints);
+    const nose = new THREE.Line(gNose, mNose);
+    scene.add(nose);
 
     // 平行光源
     const directionalLight = new THREE.DirectionalLight(
@@ -153,12 +169,12 @@ function init() {
     var t = 0;
     function tick() {
         requestAnimationFrame(tick);
-         camera.position.x = 500 * Math.sin(Date.now() / 2000); //500; //
-         camera.position.y = 0;
-         camera.position.z = 500 * Math.cos(Date.now() / 2000); //100; //
-         //camera.position.x = 500;//500 * Math.sin(Date.now() / 2000); //500; //
-         //camera.position.y =  0; //
-         //camera.position.z = 100;//500 * Math.cos(Date.now() / 2000); //100; //
+        //  camera.position.x = 500 * Math.sin(Date.now() / 1000); //500; //
+        //  camera.position.y = 0;
+        //  camera.position.z = 500 * Math.cos(Date.now() / 1000); //100; //
+        camera.position.x = 400;//500 * Math.sin(Date.now() / 2000); //500; //
+        camera.position.y = 0; //
+        camera.position.z = 100;//500 * Math.cos(Date.now() / 2000); //100; //
         //原点方向を見つめる
         camera.lookAt(new THREE.Vector3(0, 0, 0));
 
