@@ -141,6 +141,7 @@ function init() {
     madofront.rotation.z = Math.PI / 120;
     madofront.position.set(51, 0, 100);
     scene.add(madofront);
+    // TODO
 
     // 口と鼻
     const nosePoints = [];
@@ -151,6 +152,12 @@ function init() {
     const gNose = new THREE.BufferGeometry().setFromPoints(nosePoints);
     const nose = new THREE.Line(gNose, mNose);
     scene.add(nose);
+    const gmouth = new THREE.SphereGeometry(40, 100, 100, 0, Math.PI * 2, Math.PI/2 - Math.PI/360, Math.PI/180);
+    const mmouth = new THREE.MeshBasicMaterial({ color: 0xB48166 });
+    const mouth = new THREE.Mesh(gmouth, mmouth);
+    mouth.position.set(121, -50, 100);
+    mouth.rotation.x = Math.PI / 2;
+    scene.add(mouth);
 
     // 平行光源
     const directionalLight = new THREE.DirectionalLight(
@@ -169,12 +176,12 @@ function init() {
     var t = 0;
     function tick() {
         requestAnimationFrame(tick);
-        //  camera.position.x = 500 * Math.sin(Date.now() / 1000); //500; //
-        //  camera.position.y = 0;
-        //  camera.position.z = 500 * Math.cos(Date.now() / 1000); //100; //
-        camera.position.x = 400;//500 * Math.sin(Date.now() / 2000); //500; //
-        camera.position.y = 0; //
-        camera.position.z = 100;//500 * Math.cos(Date.now() / 2000); //100; //
+         camera.position.x = 500 * Math.sin(Date.now() / 1000); //500; //
+         camera.position.y = 0;
+         camera.position.z = 500 * Math.cos(Date.now() / 1000); //100; //
+        // camera.position.x = 400;//500 * Math.sin(Date.now() / 2000); //500; //
+        // camera.position.y = 0; //
+        // camera.position.z = 100;//500 * Math.cos(Date.now() / 2000); //100; //
         //原点方向を見つめる
         camera.lookAt(new THREE.Vector3(0, 0, 0));
 
