@@ -29,9 +29,11 @@ function init() {
     const mdoumaru = new THREE.MeshBasicMaterial({ color: 0xF2D5AD });
     const doumaru0 = new THREE.Mesh(gdoumaru, mdoumaru);
     doumaru0.position.set(-50, 0, 100);
+    doumaru0.castShadow = true;
     scene.add(doumaru0);
     const doumaru1 = new THREE.Mesh(gdoumaru, mdoumaru);
     doumaru1.position.set(50, 0, 100);
+    doumaru1.castShadow = true;
     scene.add(doumaru1);
     const gdoudaen = new THREE.CylinderGeometry(100, 100, 100, 50);
     const mdoudaen = new THREE.MeshBasicMaterial({ color: 0xF2D5AD });
@@ -39,6 +41,7 @@ function init() {
     doudaen.position.set(0, 0, 100)
     doudaen.rotation.x = Math.PI / 2;
     doudaen.rotation.z = Math.PI / 2;
+    doudaen.castShadow = true;
     scene.add(doudaen);
 
     // ほっぺた
@@ -56,15 +59,12 @@ function init() {
     hoppey0.position.set(120, -50, 100);
     hoppey0.rotation.x = Math.PI / 2;
     scene.add(hoppey0);
-
     const gkyokumen = new THREE.SphereGeometry(150, 500, 500, Math.PI / 2, Math.PI / 3, Math.PI / 4, Math.PI / 4);
     const mkyokumen = new THREE.MeshBasicMaterial({ color: 0xF2D5AD });
     const kyokumen = new THREE.Mesh(gkyokumen, mkyokumen);
     kyokumen.rotation.y = Math.PI / 3;
     kyokumen.position.set(10, -50, 100);
     scene.add(kyokumen);
-
-
     const hoppey1 = new THREE.Mesh(ghoppey, mhoppey);
     hoppey1.position.set(80, -48, 60);
     hoppey1.rotation.x = Math.PI / 2;
@@ -77,7 +77,6 @@ function init() {
     hoppey2.rotation.z = Math.PI / 2 + Math.PI / 120;
     hoppey2.rotation.y = -Math.PI / 120;
     scene.add(hoppey2);
-
     const gcubebody = new THREE.BoxGeometry(30, 90, 120);
     const mcubebody = new THREE.MeshBasicMaterial({ color: 0xF2D5AD });
     const cubebody = new THREE.Mesh(gcubebody, mcubebody);
@@ -89,31 +88,26 @@ function init() {
     const gtaiya = new THREE.TorusGeometry(18, 12, 16, 100);
     const mtaiya = new THREE.MeshBasicMaterial({ color: 0x1F3818 });
     const taiya0 = new THREE.Mesh(gtaiya, mtaiya);
-    taiya0.position.set(70, -60, 0);
-    scene.add(taiya0);
-    const taiya1 = new THREE.Mesh(gtaiya, mtaiya);
-    taiya1.position.set(-70, -60, 0);
-    scene.add(taiya1);
-    const taiya2 = new THREE.Mesh(gtaiya, mtaiya);
-    taiya2.position.set(70, -60, 200);
-    scene.add(taiya2);
-    const taiya3 = new THREE.Mesh(gtaiya, mtaiya);
-    taiya3.position.set(-70, -60, 200);
-    scene.add(taiya3);
+    const taiyas = new Array();
+    for (i = 0; i < 4; i++) taiyas.push(new THREE.Mesh(gtaiya, mtaiya));
+    taiyas[0].position.set(70, -70, 10);
+    taiyas[1].position.set(-70, -70, 10);
+    taiyas[2].position.set(70, -70, 190);
+    taiyas[3].position.set(-70, -70, 190);
+    for (i = 0; i < 4; i++) {
+        taiyas[i].castShadow = true;
+        scene.add(taiyas[i]);
+    }
+
     const gtaiyaInside = new THREE.SphereGeometry(10, 50, 50);
     const mtaiyaInside = new THREE.MeshBasicMaterial({ color: 0xF0C135 });
-    const taiyaInside0 = new THREE.Mesh(gtaiyaInside, mtaiyaInside);
-    taiyaInside0.position.set(70, -60, 0);
-    scene.add(taiyaInside0);
-    const taiyaInside1 = new THREE.Mesh(gtaiyaInside, mtaiyaInside);
-    taiyaInside1.position.set(-70, -60, 0);
-    scene.add(taiyaInside1);
-    const taiyaInside2 = new THREE.Mesh(gtaiyaInside, mtaiyaInside);
-    taiyaInside2.position.set(70, -60, 200);
-    scene.add(taiyaInside2);
-    const taiyaInside3 = new THREE.Mesh(gtaiyaInside, mtaiyaInside);
-    taiyaInside3.position.set(-70, -60, 200);
-    scene.add(taiyaInside3);
+    const taiyaInsides = new Array();
+    for (i = 0; i < 4; i++) taiyaInsides.push(new THREE.Mesh(gtaiyaInside, mtaiyaInside));
+    taiyaInsides[0].position.set(70, -70, 10);
+    taiyaInsides[1].position.set(-70, -70, 10);
+    taiyaInsides[2].position.set(70, -70, 190);
+    taiyaInsides[3].position.set(-70, -70, 190);
+    for (i = 0; i < 4; i++) scene.add(taiyaInsides[i]);
 
     // 目
     const gme = new THREE.SphereGeometry(20, 50, 50);
@@ -183,20 +177,12 @@ function init() {
     const gNose = new THREE.BufferGeometry().setFromPoints(nosePoints);
     const nose = new THREE.Line(gNose, mNose);
     scene.add(nose);
-    const gmouth = new THREE.SphereGeometry(40, 100, 100, 0, Math.PI * 2, Math.PI/2 - Math.PI/360, Math.PI/180);
+    const gmouth = new THREE.SphereGeometry(40, 100, 100, 0, Math.PI * 2, Math.PI / 2 - Math.PI / 360, Math.PI / 180);
     const mmouth = new THREE.MeshBasicMaterial({ color: 0xB48166 });
     const mouth = new THREE.Mesh(gmouth, mmouth);
     mouth.position.set(121, -50, 100);
     mouth.rotation.x = Math.PI / 2;
     scene.add(mouth);
-
-    // 平行光源
-    const directionalLight = new THREE.DirectionalLight(
-        0xffffff
-    );
-    directionalLight.position.set(1, 1, 1);
-    // シーンに追加
-    scene.add(directionalLight);
 
     // 初回実行
     renderer.render(scene, camera);
@@ -205,18 +191,43 @@ function init() {
     tick();
 
     var t = 0;
+    var t_taiya = 0;
+    var taiya_state = 0;
     function tick() {
         requestAnimationFrame(tick);
-         camera.position.x = 500 * Math.sin(Date.now() / 1000); //500; //
-         camera.position.y = 0;
-         camera.position.z = 500 * Math.cos(Date.now() / 1000); //100; //
-        // camera.position.x = 500 * Math.sin(Math.PI * 1);
+        camera.position.x = 500 * Math.sin(Date.now() / -2000);
+        camera.position.y = 500;
+        camera.position.z = 100 + 500 * Math.cos(Date.now() / -2000);
+        // camera.position.x = 500 * Math.sin(Math.PI * 0.5);
         // camera.position.y = 0;
-        // camera.position.z = 500 * Math.cos(Math.PI * 1);
+        // camera.position.z = 500 * Math.cos(Math.PI * 0.5);
+
+        // taiya
+        if (taiya_state == 0) {
+            taiyas[0].rotation.x = (Math.PI / 2 * t_taiya / 50);
+            taiyas[3].rotation.x = (Math.PI / 2 * t_taiya / -50);
+        } else if (taiya_state == 1) {
+            taiyas[0].rotation.x = (Math.PI / 2 * (50 - t_taiya) / 50);
+            taiyas[3].rotation.x = (Math.PI / 2 * (50 - t_taiya) / -50);
+        } else if (taiya_state == 2) {
+            taiyas[1].rotation.x = (Math.PI / 2 * t_taiya / 50);
+            taiyas[2].rotation.x = (Math.PI / 2 * t_taiya / -50);
+        } else if (taiya_state == 3) {
+            taiyas[1].rotation.x = (Math.PI / 2 * (50 - t_taiya) / 50);
+            taiyas[2].rotation.x = (Math.PI / 2 * (50 - t_taiya) / -50);
+        }
+
+
         //原点方向を見つめる
         camera.lookAt(new THREE.Vector3(0, 0, 0));
 
         t++;
+        t_taiya++;
+        if (t_taiya > 50) {
+            t_taiya = 0;
+            taiya_state++;
+            taiya_state %= 4;
+        }
         //camera.position.set(100 * Math.cos(t / 100), 0 ,  0 * Math.cos(t / 50));
 
         // レンダリング
