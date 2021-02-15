@@ -15,6 +15,7 @@ function init() {
     // シーンを作成
     const scene = new THREE.Scene();
 
+    floor();
     molucar(0, 0, 0);
     light();
     camera();
@@ -29,7 +30,7 @@ function init() {
         loop();
         var t = 0;
         var t_y = 0;
-        var dividor = 200;
+        var dividor = 1000;
         var t_state = 0;
         function loop() {
             requestAnimationFrame(loop);
@@ -40,7 +41,7 @@ function init() {
                 camera.position.z = 500 * Math.cos(Math.PI * 0.5);
             } else {
                 camera.position.x = 500 * Math.sin(-2 * Math.PI * t / dividor);
-                camera.position.y = 500 * Math.sin(Math.PI * t_y / (dividor * 4));
+                camera.position.y = -100 + 500 * Math.sin(Math.PI * t_y / (dividor * 4));
                 camera.position.z = 100 + 500 * Math.cos(-2 * Math.PI * t / dividor);
             }
 
@@ -63,15 +64,46 @@ function init() {
     }
 
     function light() {
-        const light = new THREE.DirectionalLight(0xffffff, 0.5);
-        light.position.set(-500, 500, 0); //ライトの位置(x,y,z)
-        scene.add(light); //シーンにディレクショナルライトを追加
-        const ambient = new THREE.AmbientLight(0xf8f8ff, 0.5);
-        scene.add(ambient); //シーンにアンビエントライトを追加
+        const light = new THREE.DirectionalLight(0xffffff, 0.6);
+        light.position.set(-500, 100, 0);
+        scene.add(light);
+        const ambient = new THREE.AmbientLight(0xf8f8ff, 0.6);
+        scene.add(ambient);
+
+        var t = 0;
+        var dividor = 333;
+        loop();
+        function loop() {
+            requestAnimationFrame(loop);
+
+            light.position.x = -500 * Math.sin(-2 * Math.PI * t / dividor);
+            light.position.y = 100;
+            light.position.z = 100 + 500 * Math.cos(-2 * Math.PI * t / dividor);
+
+            //原点方向を見つめる
+            light.lookAt(new THREE.Vector3(0, 0, 0));
+
+            // レンダリング
+            renderer.render(scene, camera);
+
+            t++;
+            if (t > dividor) {
+                t = 0;
+            }
+        }
+    }
+
+    function snow() {
+        
     }
 
     function floor() {
-        
+        var gfloor = new THREE.PlaneGeometry(10000, 10000, 1, 1);
+        var mfloor = new THREE.MeshToonMaterial({ color: 0xe0ffff });
+        var floor = new THREE.Mesh(gfloor, mfloor);
+        floor.position.set(0, -99, 0);
+        floor.rotation.x = Math.PI * 3 / 2;
+        scene.add(floor);
     }
 
     function molucar(size, position_offset_x, position_oddset_y) {
@@ -115,7 +147,7 @@ function init() {
         const mkyokumen = new THREE.MeshToonMaterial({ color: 0xF2D5AD });
         const kyokumen = new THREE.Mesh(gkyokumen, mkyokumen);
         kyokumen.rotation.y = Math.PI / 3;
-        kyokumen.position.set(11, -50, 100);
+        kyokumen.position.set(10, -50, 100);
         scene.add(kyokumen);
         const hoppey1 = new THREE.Mesh(ghoppey, mhoppey);
         hoppey1.position.set(80, -48, 60);
@@ -240,28 +272,29 @@ function init() {
         var t = 0;
         var t_taiya = 0;
         var taiya_state = 0;
+        var dividor = 25;
 
         loop();
         function loop() {
             requestAnimationFrame(loop);
             // taiya
             if (taiya_state == 0) {
-                taiyas[0].rotation.x = (Math.PI / 2 * t_taiya / 50);
-                taiyas[3].rotation.x = (Math.PI / 2 * t_taiya / -50);
+                taiyas[0].rotation.x = (Math.PI / 2 * t_taiya / dividor);
+                taiyas[3].rotation.x = (Math.PI / 2 * t_taiya / -dividor);
             } else if (taiya_state == 1) {
-                taiyas[0].rotation.x = (Math.PI / 2 * (50 - t_taiya) / 50);
-                taiyas[3].rotation.x = (Math.PI / 2 * (50 - t_taiya) / -50);
+                taiyas[0].rotation.x = (Math.PI / 2 * (dividor - t_taiya) / dividor);
+                taiyas[3].rotation.x = (Math.PI / 2 * (dividor - t_taiya) / -dividor);
             } else if (taiya_state == 2) {
-                taiyas[1].rotation.x = (Math.PI / 2 * t_taiya / 50);
-                taiyas[2].rotation.x = (Math.PI / 2 * t_taiya / -50);
+                taiyas[1].rotation.x = (Math.PI / 2 * t_taiya / dividor);
+                taiyas[2].rotation.x = (Math.PI / 2 * t_taiya / -dividor);
             } else if (taiya_state == 3) {
-                taiyas[1].rotation.x = (Math.PI / 2 * (50 - t_taiya) / 50);
-                taiyas[2].rotation.x = (Math.PI / 2 * (50 - t_taiya) / -50);
+                taiyas[1].rotation.x = (Math.PI / 2 * (dividor - t_taiya) / dividor);
+                taiyas[2].rotation.x = (Math.PI / 2 * (dividor - t_taiya) / -dividor);
             }
 
             t++;
             t_taiya++;
-            if (t_taiya > 50) {
+            if (t_taiya > dividor) {
                 t_taiya = 0;
                 taiya_state++;
                 taiya_state %= 4;
