@@ -1,6 +1,6 @@
-window.addEventListener("DOMContentLoaded", init);
+window.addEventListener("DOMContentLoaded", main);
 
-function init() {
+function main() {
     const width = window.innerWidth;
     const height = window.innerHeight;
     const debug = false;
@@ -9,7 +9,7 @@ function init() {
     const renderer = new THREE.WebGLRenderer({
         canvas: document.querySelector("#myCanvas")
     });
-    renderer.setPixelRatio(window.devicePixelRatio);
+    // renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(width, height);
 
     // シーンを作成
@@ -17,11 +17,12 @@ function init() {
 
     floor();
     molucar(0, 0, 0);
+    snow();
     light();
-    camera();
+    set_camera();
 
     // カメラ
-    function camera() {
+    function set_camera() {
         const camera = new THREE.PerspectiveCamera(45, width / height, 1, 10000);
         camera.position.set(0, 0, +1000);
 
@@ -67,11 +68,12 @@ function init() {
         const light = new THREE.DirectionalLight(0xffffff, 0.6);
         light.position.set(-500, 100, 0);
         scene.add(light);
-        const ambient = new THREE.AmbientLight(0xf8f8ff, 0.6);
-        scene.add(ambient);
+        const light1 = new THREE.DirectionalLight(0xffffff, 0.6);
+        light1.position.set(0, 1000, 0);
+        scene.add(light1);
 
         var t = 0;
-        var dividor = 333;
+        var dividor = 555;
         loop();
         function loop() {
             requestAnimationFrame(loop);
@@ -83,9 +85,6 @@ function init() {
             //原点方向を見つめる
             light.lookAt(new THREE.Vector3(0, 0, 0));
 
-            // レンダリング
-            renderer.render(scene, camera);
-
             t++;
             if (t > dividor) {
                 t = 0;
@@ -94,12 +93,47 @@ function init() {
     }
 
     function snow() {
-        
+        var snows = [];
+        var snownum = 400;
+        const gsnow = new THREE.SphereGeometry(2, 10, 10);
+        const msnow = new THREE.MeshLambertMaterial({ color: 0x00ffff });
+
+        for (var i = 0; i < snownum; i++) {
+            const snow = new THREE.Mesh(gsnow, msnow);
+            snow.position.x = Math.random() * 2000 - 1000;
+            snow.position.y = Math.random() * 2000 - 1000;
+            snow.position.z = Math.random() * 2000 - 1000;
+            snow.scale.x = snow.scale.y = 1;
+            scene.add(snow);
+
+            snows.push(snow);
+        }
+        setInterval(loop, 1000 / 60);
+
+        function loop() {
+
+            for (var i = 0; i < snows.length; i++) {
+                var snow = snows[i];
+                with (snow.position) {
+                    if (Math.random() % 2 == 0) {
+                        x = x + 1;
+                    } else {
+                        x = x - 1;
+                    }
+                    y = y - 1;
+                    if (y < -1000) y += 2000;
+                    if (x > 1000) x -= 2000;
+                    else if (x < -1000) x += 2000;
+                    if (z > 1000) z -= 2000;
+                    else if (z < -1000) z += 2000;
+                }
+            }
+        }
     }
 
     function floor() {
         var gfloor = new THREE.PlaneGeometry(10000, 10000, 1, 1);
-        var mfloor = new THREE.MeshToonMaterial({ color: 0xe0ffff });
+        var mfloor = new THREE.MeshLambertMaterial({ color: 0xe0ffff });
         var floor = new THREE.Mesh(gfloor, mfloor);
         floor.position.set(0, -99, 0);
         floor.rotation.x = Math.PI * 3 / 2;
@@ -110,7 +144,7 @@ function init() {
         const molucar_object = [];
         // 胴体を作成
         const gdoumaru = new THREE.SphereGeometry(100, 500, 500);
-        const mdoumaru = new THREE.MeshToonMaterial({ color: 0xF2D5AD });
+        const mdoumaru = new THREE.MeshLambertMaterial({ color: 0xF2D5AD });
         const doumaru0 = new THREE.Mesh(gdoumaru, mdoumaru);
         doumaru0.position.set(-50, 0, 100);
         doumaru0.castShadow = true;
@@ -120,7 +154,7 @@ function init() {
         doumaru1.castShadow = true;
         scene.add(doumaru1);
         const gdoudaen = new THREE.CylinderGeometry(100, 100, 100, 50);
-        const mdoudaen = new THREE.MeshToonMaterial({ color: 0xF2D5AD });
+        const mdoudaen = new THREE.MeshLambertMaterial({ color: 0xF2D5AD });
         const doudaen = new THREE.Mesh(gdoudaen, mdoudaen);
         doudaen.position.set(0, 0, 100)
         doudaen.rotation.x = Math.PI / 2;
@@ -130,7 +164,7 @@ function init() {
 
         // ほっぺた
         const ghoppe = new THREE.SphereGeometry(40, 500, 500);
-        const mhoppe = new THREE.MeshToonMaterial({ color: 0xF2D5AD });
+        const mhoppe = new THREE.MeshLambertMaterial({ color: 0xF2D5AD });
         const hoppe0 = new THREE.Mesh(ghoppe, mhoppe);
         hoppe0.position.set(120, -50, 60);
         scene.add(hoppe0);
@@ -138,13 +172,13 @@ function init() {
         hoppe1.position.set(120, -50, 140);
         scene.add(hoppe1);
         const ghoppey = new THREE.CylinderGeometry(40, 40, 80, 50);
-        const mhoppey = new THREE.MeshToonMaterial({ color: 0xF2D5AD });
+        const mhoppey = new THREE.MeshLambertMaterial({ color: 0xF2D5AD });
         const hoppey0 = new THREE.Mesh(ghoppey, mhoppey);
         hoppey0.position.set(120, -50, 100);
         hoppey0.rotation.x = Math.PI / 2;
         scene.add(hoppey0);
-        const gkyokumen = new THREE.SphereGeometry(150, 500, 500, Math.PI / 2, Math.PI / 3, Math.PI / 4, Math.PI / 4);
-        const mkyokumen = new THREE.MeshToonMaterial({ color: 0xF2D5AD });
+        const gkyokumen = new THREE.SphereGeometry(150, 500, 500, Math.PI / 2 + Math.PI / 120, Math.PI / 3 - Math.PI / 60, Math.PI / 4, Math.PI / 4);
+        const mkyokumen = new THREE.MeshLambertMaterial({ color: 0xF2D5AD });
         const kyokumen = new THREE.Mesh(gkyokumen, mkyokumen);
         kyokumen.rotation.y = Math.PI / 3;
         kyokumen.position.set(10, -50, 100);
@@ -161,8 +195,8 @@ function init() {
         hoppey2.rotation.z = Math.PI / 2 + Math.PI / 120;
         hoppey2.rotation.y = -Math.PI / 120;
         scene.add(hoppey2);
-        const gcubebody = new THREE.BoxGeometry(30, 90, 120);
-        const mcubebody = new THREE.MeshToonMaterial({ color: 0xF2D5AD });
+        const gcubebody = new THREE.BoxGeometry(30, 90, 110);
+        const mcubebody = new THREE.MeshLambertMaterial({ color: 0xF2D5AD });
         const cubebody = new THREE.Mesh(gcubebody, mcubebody);
         cubebody.rotation.z = Math.PI / 8;
         cubebody.position.set(123.5, -5, 100);
@@ -170,7 +204,7 @@ function init() {
 
         // タイヤ
         const gtaiya = new THREE.TorusGeometry(18, 12, 16, 100);
-        const mtaiya = new THREE.MeshToonMaterial({ color: 0x1F3818 });
+        const mtaiya = new THREE.MeshLambertMaterial({ color: 0x1F3818 });
         const taiya0 = new THREE.Mesh(gtaiya, mtaiya);
         const taiyas = new Array();
         for (i = 0; i < 4; i++) taiyas.push(new THREE.Mesh(gtaiya, mtaiya));
@@ -184,7 +218,7 @@ function init() {
         }
 
         const gtaiyaInside = new THREE.SphereGeometry(10, 50, 50);
-        const mtaiyaInside = new THREE.MeshToonMaterial({ color: 0xF0C135 });
+        const mtaiyaInside = new THREE.MeshLambertMaterial({ color: 0xF0C135 });
         const taiyaInsides = new Array();
         for (i = 0; i < 4; i++) taiyaInsides.push(new THREE.Mesh(gtaiyaInside, mtaiyaInside));
         taiyaInsides[0].position.set(70, -70, 10);
@@ -205,15 +239,15 @@ function init() {
         const gmehigh = new THREE.SphereGeometry(10, 50, 50);
         const mmehigh = new THREE.MeshLambertMaterial({ color: 0xAEA5A0 });
         const mehigh0 = new THREE.Mesh(gmehigh, mmehigh);
-        mehigh0.position.set(149, -5, 80);
+        mehigh0.position.set(149, -5, 81);
         scene.add(mehigh0);
         const mehigh1 = new THREE.Mesh(gmehigh, mmehigh);
-        mehigh1.position.set(149, -5, 120);
+        mehigh1.position.set(149, -5, 119);
         scene.add(mehigh1);
 
         // 耳
         const gmimi = new THREE.TorusGeometry(8, 10, 20, 100);
-        const mmimi = new THREE.MeshToonMaterial({ color: 0xF2D5AD });
+        const mmimi = new THREE.MeshLambertMaterial({ color: 0xF2D5AD });
         const mimi0 = new THREE.Mesh(gmimi, mmimi);
         mimi0.position.set(100, 25, 10);
         mimi0.rotation.x = Math.PI / 2;
@@ -238,19 +272,6 @@ function init() {
         madofront1.rotation.z = Math.PI / 120;
         madofront1.position.set(-51, 0, 100);
         scene.add(madofront1);
-        // radiusTop : Float, radiusBottom : Float, height : Float, radialSegments : Integer, heightSegments : Integer, openEnded : Boolean, thetaStart : Float, thetaLength : Float
-        const gmadoSide = new THREE.CylinderGeometry(101, 101, 140, 100, 10, true, 0, Math.PI / 7);
-        const mmadoSide = new THREE.MeshLambertMaterial({ color: 0xB48166 });
-        const madoSide0 = new THREE.Mesh(gmadoSide, mmadoSide);
-        madoSide0.position.set(0, 0, 100)
-        madoSide0.rotation.x = - Math.PI / 10;
-        madoSide0.rotation.z = Math.PI / 2;
-        scene.add(madoSide0);
-        const madoSide1 = new THREE.Mesh(gmadoSide, mmadoSide);
-        madoSide1.position.set(0, 0, 100)
-        madoSide1.rotation.x = Math.PI + Math.PI / 10 + Math.PI / 7;
-        madoSide1.rotation.z = Math.PI / 2;
-        scene.add(madoSide1);
 
         // 口と鼻
         const nosePoints = [];
@@ -258,10 +279,17 @@ function init() {
         nosePoints.push(new THREE.Vector3(160, -40, 100));
         nosePoints.push(new THREE.Vector3(159, -30, 90));
         const mNose = new THREE.MeshLambertMaterial({ color: 0x84491D });
-        const gNose = new THREE.BufferGeometry().setFromPoints(nosePoints);
-        const nose = new THREE.Line(gNose, mNose);
+        const gnose = new THREE.BoxGeometry(2, 10, 0.5);
+        const mnose = new THREE.MeshLambertMaterial({ color: 0xB48166 });
+        const nose = new THREE.Mesh(gnose, mnose);
+        nose.position.set(159, -37, 103);
+        nose.rotation.x = Math.PI / 5;
         scene.add(nose);
-        const gmouth = new THREE.SphereGeometry(40, 100, 100, 0, Math.PI * 2, Math.PI / 2 - Math.PI / 360, Math.PI / 180);
+        const nose0 = new THREE.Mesh(gnose, mnose);
+        nose0.position.set(159, -37, 97);
+        nose0.rotation.x = -Math.PI / 5;
+        scene.add(nose0);
+        const gmouth = new THREE.SphereGeometry(40, 100, 100, 0, Math.PI * 2, Math.PI / 2 - Math.PI / 720, Math.PI / 360);
         const mmouth = new THREE.MeshLambertMaterial({ color: 0xB48166 });
         const mouth = new THREE.Mesh(gmouth, mmouth);
         mouth.position.set(121, -50, 100);
