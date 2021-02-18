@@ -3,7 +3,7 @@ window.addEventListener("DOMContentLoaded", main);
 function main() {
     const width = window.innerWidth;
     const height = window.innerHeight;
-    const debug = true;
+    const debug = false;
 
     // レンダラーを作成
     const renderer = new THREE.WebGLRenderer({
@@ -31,7 +31,7 @@ function main() {
         loop();
         var t = 0;
         var t_y = 0;
-        var dividor = 1000;
+        var interval = 1000;
         var t_state = 0;
         function loop() {
             requestAnimationFrame(loop);
@@ -41,9 +41,9 @@ function main() {
                 camera.position.y = 0;
                 camera.position.z = 500 * Math.cos(Math.PI * 0.5);
             } else {
-                camera.position.x = 500 * Math.sin(-2 * Math.PI * t / dividor);
-                camera.position.y = -100 + 500 * Math.sin(Math.PI * t_y / (dividor * 4));
-                camera.position.z = 100 + 500 * Math.cos(-2 * Math.PI * t / dividor);
+                camera.position.x = 500 * Math.sin(-2 * Math.PI * t / interval);
+                camera.position.y = -100 + 500 * Math.sin(Math.PI * t_y / (interval * 4));
+                camera.position.z = 100 + 500 * Math.cos(-2 * Math.PI * t / interval);
             }
 
             //原点方向を見つめる
@@ -54,11 +54,11 @@ function main() {
 
             t++;
             t_y++;
-            if (t > dividor) {
+            if (t > interval) {
                 t_state = (t_state + 1) % 2;
                 t = 0;
             }
-            if (t_y > dividor * 4) {
+            if (t_y > interval * 4) {
                 t_y = 0;
             }
         }
@@ -72,20 +72,20 @@ function main() {
         scene.add(ambient);
 
         var t = 0;
-        var dividor = 555;
+        var interval = 555;
         loop();
         function loop() {
             requestAnimationFrame(loop);
 
-            light.position.x = -500 * Math.sin(-2 * Math.PI * t / dividor);
+            light.position.x = -500 * Math.sin(-2 * Math.PI * t / interval);
             light.position.y = 100;
-            light.position.z = 100 + 500 * Math.cos(-2 * Math.PI * t / dividor);
+            light.position.z = 100 + 500 * Math.cos(-2 * Math.PI * t / interval);
 
             //原点方向を見つめる
             light.lookAt(new THREE.Vector3(0, 0, 0));
 
             t++;
-            if (t > dividor) {
+            if (t > interval) {
                 t = 0;
             }
         }
@@ -142,24 +142,24 @@ function main() {
     function molucar(size, position_offset_x, position_oddset_y) {
         const molucar_object = [];
         // 胴体を作成
-        const gdoumaru = new THREE.SphereGeometry(100, 500, 500);
-        const mdoumaru = new THREE.MeshToonMaterial({ color: 0xF2D5AD });
-        const doumaru0 = new THREE.Mesh(gdoumaru, mdoumaru);
-        doumaru0.position.set(-50, 0, 100);
-        doumaru0.castShadow = true;
-        scene.add(doumaru0);
-        const doumaru1 = new THREE.Mesh(gdoumaru, mdoumaru);
-        doumaru1.position.set(50, 0, 100);
-        doumaru1.castShadow = true;
-        scene.add(doumaru1);
-        const gdoudaen = new THREE.CylinderGeometry(100, 100, 100, 50);
-        const mdoudaen = new THREE.MeshToonMaterial({ color: 0xF2D5AD });
-        const doudaen = new THREE.Mesh(gdoudaen, mdoudaen);
-        doudaen.position.set(0, 0, 100)
-        doudaen.rotation.x = Math.PI / 2;
-        doudaen.rotation.z = Math.PI / 2;
-        doudaen.castShadow = true;
-        scene.add(doudaen);
+        const gbody = new THREE.SphereGeometry(100, 500, 500);
+        const mbody = new THREE.MeshToonMaterial({ color: 0xF2D5AD });
+        const body0 = new THREE.Mesh(gbody, mbody);
+        body0.position.set(-50, 0, 100);
+        body0.castShadow = true;
+        scene.add(body0);
+        const body1 = new THREE.Mesh(gbody, mbody);
+        body1.position.set(50, 0, 100);
+        body1.castShadow = true;
+        scene.add(body1);
+        const gbodycyl = new THREE.CylinderGeometry(100, 100, 100, 50);
+        const mbodycyl = new THREE.MeshToonMaterial({ color: 0xF2D5AD });
+        const bodycyl = new THREE.Mesh(gbodycyl, mbodycyl);
+        bodycyl.position.set(0, 0, 100)
+        bodycyl.rotation.x = Math.PI / 2;
+        bodycyl.rotation.z = Math.PI / 2;
+        bodycyl.castShadow = true;
+        scene.add(bodycyl);
 
         // ほっぺた
         const ghoppe = new THREE.SphereGeometry(40, 500, 500);
@@ -305,29 +305,29 @@ function main() {
         var t = 0;
         var t_taiya = 0;
         var taiya_state = 0;
-        var dividor = 25;
+        var interval = 25;
 
         loop();
         function loop() {
             requestAnimationFrame(loop);
             // taiya
             if (taiya_state == 0) {
-                taiyas[0].rotation.x = (Math.PI / 2 * t_taiya / dividor);
-                taiyas[3].rotation.x = (Math.PI / 2 * t_taiya / -dividor);
+                taiyas[0].rotation.x = (Math.PI / 2 * t_taiya / interval);
+                taiyas[3].rotation.x = (Math.PI / 2 * t_taiya / -interval);
             } else if (taiya_state == 1) {
-                taiyas[0].rotation.x = (Math.PI / 2 * (dividor - t_taiya) / dividor);
-                taiyas[3].rotation.x = (Math.PI / 2 * (dividor - t_taiya) / -dividor);
+                taiyas[0].rotation.x = (Math.PI / 2 * (interval - t_taiya) / interval);
+                taiyas[3].rotation.x = (Math.PI / 2 * (interval - t_taiya) / -interval);
             } else if (taiya_state == 2) {
-                taiyas[1].rotation.x = (Math.PI / 2 * t_taiya / dividor);
-                taiyas[2].rotation.x = (Math.PI / 2 * t_taiya / -dividor);
+                taiyas[1].rotation.x = (Math.PI / 2 * t_taiya / interval);
+                taiyas[2].rotation.x = (Math.PI / 2 * t_taiya / -interval);
             } else if (taiya_state == 3) {
-                taiyas[1].rotation.x = (Math.PI / 2 * (dividor - t_taiya) / dividor);
-                taiyas[2].rotation.x = (Math.PI / 2 * (dividor - t_taiya) / -dividor);
+                taiyas[1].rotation.x = (Math.PI / 2 * (interval - t_taiya) / interval);
+                taiyas[2].rotation.x = (Math.PI / 2 * (interval - t_taiya) / -interval);
             }
 
             t++;
             t_taiya++;
-            if (t_taiya > dividor) {
+            if (t_taiya > interval) {
                 t_taiya = 0;
                 taiya_state++;
                 taiya_state %= 4;
